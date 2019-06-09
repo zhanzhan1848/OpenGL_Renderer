@@ -28,6 +28,7 @@ SOURCES += \
         Camera.cpp \
         Modle.cpp \
         OpenGLScene.cpp \
+        Shader.cpp \
         globalvar.cpp \
         main.cpp \
         main_2.cpp \
@@ -38,6 +39,7 @@ HEADERS += \
         Camera.h \
         Modle.h \
         OpenGLScene.h \
+        Shader.h \
         globalvar.h \
         mainwindow.h \
         oglWindow.h
