@@ -2,5 +2,5 @@
 
 Shader::Shader()
 {
-
+    int a = 0;
 }
