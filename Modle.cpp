@@ -218,7 +218,7 @@ mesh::mesh()
 {
     initializeOpenGLFunctions();
 
-    //init data
+    //init gl data
     shader = new QOpenGLShaderProgram();
     QString path = "../OpenGL_Renderer/shader/";
     shader->addShaderFromSourceFile(QOpenGLShader::Vertex,path + "mesh.vert");
