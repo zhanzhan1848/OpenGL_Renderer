@@ -1,6 +1,12 @@
 #include "Camera.h"
 
 
+CameraPtr Camera::create(float x, float y, float z)
+{
+    CameraPtr cam{new Camera(x,y,z)};
+    return cam;
+}
+
 Camera::Camera(float x, float y, float z)
 {
     w = 4;
@@ -16,6 +22,23 @@ QMatrix4x4 Camera::getMatrix()
     transform.setToIdentity();
     transform.lookAt(Position,Target,WorldUp);
     return project*transform;
+}
+
+QMatrix4x4 Camera::getSkyMatrix()
+{
+    if (MODE == MODE_MOVE || MODE == MODE_ZOOM)
+            Target = Position + Forward;
+    Target = QVector3D(0,0,0);
+    transform.setToIdentity();
+    transform.lookAt(Position,Target,WorldUp);
+
+    QMatrix4x4 skyboxView;
+    skyboxView.setRow(0, QVector4D(transform(0, 0), transform(0, 1), transform(0, 2), 0.0f));
+    skyboxView.setRow(1, QVector4D(transform(1, 0), transform(1, 1), transform(1, 2), 0.0f));
+    skyboxView.setRow(2, QVector4D(transform(2, 0), transform(2, 1), transform(2, 2), 0.0f));
+    skyboxView.setRow(3, QVector4D(0.0f,       0.0f,       0.0f,       1.0f));
+
+    return project*skyboxView;
 }
 
 void Camera::updateCamPos()

@@ -19,10 +19,7 @@ OpenGLScene::OpenGLScene(QWindow *parent) :OpenGLWindow(parent)
 
 OpenGLScene::~OpenGLScene()
 {
-    for(modle*m:modles)
-        delete m;
     modles.clear();
-    delete cam;
     qDebug()<<"quit";
 }
 
@@ -41,16 +38,19 @@ void OpenGLScene::initialize()
 
     //scene modles
     std::string path = "/home/arno/Coding/Modles/d.obj";
-    modle*myModle = new modle(path);
-    modles.push_back(myModle);
-//    path = "/home/arno/Coding/Modles/untitled5.obj";
-//    modle*myModle2 = new modle(path);
-    //modles.push_back(myModle2);
-
+    modles.push_back(modle::create(path));
+    path = "/home/arno/Coding/Modles/untitled.obj";
+    modles.push_back(modle::create(path));
 
     //camera
-    cam = new Camera(0,0,4);
+    cam = Camera::create(0,0,4);
     cam->updateProject(width(),height());
+
+    //skybox
+    skybox = Skybox::create();
+    skydome = Skydome::create();
+    std::string p = "../data/Skydome/Top_Of_West_Loop.hdr";
+    skydome->setImage(p);
     hasInitialized = true;
 }
 
@@ -59,11 +59,15 @@ void OpenGLScene::render()
 {
     //glEnable(GL_DEPTH_TEST);
     cam->updateCamPos();
+    QMatrix4x4 camMatrix = cam->getMatrix();
 
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);//清除并渲染背景
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//清除颜色缓冲和深度缓冲
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    modles[0]->draw(cam->getMatrix());
+    //skybox->draw(cam->getSkyMatrix());
+    skydome->draw(cam->getSkyMatrix());
+    for(modlePtr m:modles)
+        m->draw(camMatrix);
 }
 
 
@@ -172,6 +176,16 @@ void OpenGLScene::keyPressEvent(QKeyEvent *event)
         break;
     case Qt::Key_5:
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        break;
+    case Qt::Key_Down:
+        for(modlePtr md:modles)
+            for(meshPtr m:md->data)
+                m->transform.translate(0,-0.1f,0);
+        break;
+    case Qt::Key_Up:
+        for(modlePtr md:modles)
+            for(meshPtr m:md->data)
+                m->transform.translate(0,0.1f,0);
         break;
     default:
         RENDER_MODE = GL_TRIANGLES;

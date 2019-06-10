@@ -13,6 +13,13 @@
 #include <QMatrix4x4>
 #include <QFileInfo>
 #include <globalvar.h>
+//#include <SOIL.h>
+
+modlePtr modle::create(std::string &objPath)
+{
+    modlePtr md{new modle(objPath)};
+    return md;
+}
 
 modle::modle(std::string &objPath) {
     path = objPath;
@@ -20,7 +27,7 @@ modle::modle(std::string &objPath) {
 }
 
 void modle::setObj(std::string &objPath) {
-    remove();
+    data.clear();
     path = objPath;
     load();
 }
@@ -30,7 +37,7 @@ void modle::load() {
 
     if (in.is_open()) {
         std::string line;
-        mesh* currentMesh = new mesh();
+        meshPtr currentMesh = mesh::create();
         data.push_back(currentMesh);
 
         int idx = 0;
@@ -54,7 +61,7 @@ void modle::load() {
                 offset_uv += currentMesh->uvs.size()/2;
                 if(idx!=0)
                 {
-                    currentMesh = new mesh();
+                    currentMesh = mesh::create();
                     data.push_back(currentMesh);
                  }
                 currentMesh->name = dt.join("").toStdString();
@@ -116,11 +123,8 @@ void modle::load() {
     }
 
     //qDebug()<<data.size();
-    for(mesh* m:data)
-    {
+    for(meshPtr m:data)
         m->setup();
-    }
-
 }
 
 void mesh::setup()
@@ -142,8 +146,8 @@ void mesh::setup()
         data.push_back(uvs[uvElements[i]*2+1]);
     }
 
-    qDebug()<<data.size();
-    qDebug()<<posElements.size();
+    //qDebug()<<data.size();
+    //qDebug()<<posElements.size();
 
     //bind buffer
     shader->bind();
@@ -190,18 +194,6 @@ void mesh::draw(QMatrix4x4 matrix) {
     shader->release();
 }
 
-void mesh::remove() {
-    qDebug()<<positions.size();
-    VAO.destroy();
-    VBO.destroy();
-    EBO.destroy();
-    shader->destroyed();
-    delete shader;
-    clearData();
-
-    qDebug()<<"remove mesh: "<<QString::fromStdString(name);
-}
-
 void mesh::clearData()
 {
     positions.clear();
@@ -210,6 +202,12 @@ void mesh::clearData()
     posElements.clear();
     norElements.clear();
     uvElements.clear();
+}
+
+meshPtr mesh::create()
+{
+    meshPtr ms{new mesh()};
+    return ms;
 }
 
 mesh::mesh()
@@ -238,26 +236,24 @@ mesh::mesh()
 }
 
 mesh::~mesh() {
-    remove();
+    qDebug()<<positions.size();
+    VAO.destroy();
+    VBO.destroy();
+    EBO.destroy();
+    shader->destroyed();
+    delete shader;
+    clearData();
+
+    qDebug()<<"remove mesh: "<<QString::fromStdString(name);
 }
+
 
 void modle::draw(QMatrix4x4 matrix) {
-    for(mesh* m:data)
-    {
+    for(meshPtr m:data)
         m->draw(matrix);
-    }
 }
 
-void modle::remove()
-{
-    for(mesh* m:data)
-        delete m;
-
-    data.clear();
-    //qDebug()<<"remove Modle";
-
-}
 
 modle::~modle() {
-    remove();
+    data.clear();
 }

@@ -12,10 +12,11 @@
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
-//class mesh;
-//class modle;
-//using meshPtr = std::shared_ptr<mesh>;
-//using modlePtr = std::shared_ptr<modle>;
+
+class mesh;
+class modle;
+using meshPtr = std::shared_ptr<mesh>;
+using modlePtr = std::shared_ptr<modle>;
 
 struct vertex {
     size_t index = -1;
@@ -27,6 +28,7 @@ struct vertex {
 class mesh:protected QOpenGLFunctions
 {
 public:
+    static meshPtr create();
     mesh();
     ~mesh();
     std::string name;
@@ -51,22 +53,21 @@ public:
     QMatrix4x4 transform;
     void setup();
     void draw(QMatrix4x4 matrix);
-    void remove();
     void clearData();
 
 };
 
 class modle {
 public:
+    static modlePtr create(std::string &objPath);
     modle(std::string &objPath);
     ~modle();
     void setObj(std::string &objPath);
-
     void draw(QMatrix4x4 matrix);
-    void remove();
+    std::vector<meshPtr> data;
 private:
     std::string path;
-    std::vector<mesh*> data;
+
     void load();
     void initBuffer();
 };

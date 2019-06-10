@@ -10,6 +10,7 @@
 #include <QMatrix4x4>
 #include <Camera.h>
 #include <QMouseEvent>
+#include <Skybox.h>
 
 class OpenGLScene :public OpenGLWindow
 {
@@ -22,8 +23,10 @@ public:
     void render() override ;
 
 private:
-    Camera *cam;
-    std::vector<modle*> modles;
+    CameraPtr cam;
+    SkyboxPtr skybox;
+    SkydomePtr skydome;
+    std::vector<modlePtr> modles;
 
     bool hasInitialized;
     float preX;

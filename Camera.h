@@ -1,15 +1,21 @@
 #pragma once
 #include <QMatrix4x4>
 #include <QVector3D>
+#include <memory>
+
+class Camera;
+using CameraPtr = std::shared_ptr<Camera>;
 
 class Camera
 {
 public:
+    static CameraPtr create(float x=0,float y=0,float z=0);
     Camera(float x=0,float y=0,float z=0);
     ~Camera();
     QMatrix4x4 transform;
     QMatrix4x4 project;
     QMatrix4x4 getMatrix();
+    QMatrix4x4 getSkyMatrix();
 
     QVector3D Position;
     QVector3D Forward;

@@ -1,11 +1,7 @@
-#ifndef SHADER_H
-#define SHADER_H
-
+#pragma once
 
 class Shader
 {
 public:
     Shader();
 };
-
-#endif // SHADER_H

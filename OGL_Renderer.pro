@@ -24,22 +24,28 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++17
 
+INCLUDEPATH += lib/stb/include/
+INCLUDEPATH += /home/arno/Coding/LIB/SOIL/src/
+
 SOURCES += \
         Camera.cpp \
         Modle.cpp \
         OpenGLScene.cpp \
         Shader.cpp \
+        Skybox.cpp \
         globalvar.cpp \
         main.cpp \
         main_2.cpp \
         mainwindow.cpp \
-        oglWindow.cpp
+        oglWindow.cpp \
+
 
 HEADERS += \
         Camera.h \
         Modle.h \
         OpenGLScene.h \
         Shader.h \
+        Skybox.h \
         globalvar.h \
         mainwindow.h \
         oglWindow.h
