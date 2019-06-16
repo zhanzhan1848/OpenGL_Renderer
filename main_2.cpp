@@ -7,7 +7,7 @@
 #include <QtGui/QScreen>
 #include <QtCore/qmath.h>
 #include <OpenGLScene.h>
-#include <Modle.h>
+#include <Model.h>
 //int main() {
 //    std::cout << "Hello, World!" << std::endl;
 //    return 0;

@@ -5,7 +5,7 @@
 #pragma once
 
 #include <oglWindow.h>
-#include <Modle.h>
+#include <Model.h>
 #include <memory>
 #include <QMatrix4x4>
 #include <Camera.h>
@@ -26,7 +26,7 @@ private:
     CameraPtr cam;
     SkyboxPtr skybox;
     SkydomePtr skydome;
-    std::vector<modlePtr> modles;
+    std::vector<modelPtr> models;
 
     bool hasInitialized;
     float preX;

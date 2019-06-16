@@ -1,5 +1,5 @@
 #pragma once
-#include "Modle.h"
+#include "Model.h"
 #include <QOpenGLFunctions>
 #include <QOpenGLTexture>
 #include <Shader.h>
@@ -34,7 +34,7 @@ public:
     QOpenGLTexture *texture;
     GLuint textureID;
     std::string path;
-    modlePtr dome;
+    modelPtr dome;
     meshPtr mesh;
     void initMaterial();
     void draw(QMatrix4x4 matrix);

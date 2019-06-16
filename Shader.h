@@ -14,8 +14,9 @@ public:
     GLuint posAttr;
     GLuint normAttr;
     GLuint uvAttr;
+    GLuint projMatrix;
     GLuint viewMatrix;
     GLuint transMatrix;
-    void setMatrix(QMatrix4x4 view,QMatrix4x4 trans);
-    void setViewMatrix(QMatrix4x4 view);
+    void setMatrix(QMatrix4x4 projM,QMatrix4x4 viewM,QMatrix4x4 trans);
+    void setViewMatrix(QMatrix4x4 viewM);
 };

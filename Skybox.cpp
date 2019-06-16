@@ -154,7 +154,7 @@ SkydomePtr Skydome::create()
 Skydome::Skydome()
 {
     std::string dm = "../data/skydome.obj";
-    dome = modle::create(dm);
+    dome = model::create(dm);
     mesh = dome->data[0];
     mesh->transform.scale(1,-1,1);
     initMaterial();
@@ -212,7 +212,8 @@ void Skydome::draw(QMatrix4x4 matrix)
 {
     //setup shader
     mesh->shader->bind();
-    mesh->shader->setMatrix(matrix,mesh->transform);
+    mesh->shader->setViewMatrix(matrix);
+    mesh->shader->setUniformValue(mesh->shader->transMatrix, mesh->transform);
     glBindTexture(GL_TEXTURE_2D, textureID);
     mesh->shader->setUniformValue("skydome", textureID);
     //texture->bind(0);

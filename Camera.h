@@ -16,6 +16,8 @@ public:
     QMatrix4x4 project;
     QMatrix4x4 getMatrix();
     QMatrix4x4 getSkyMatrix();
+    QMatrix4x4 getProjectMatrix();
+    QMatrix4x4 getViewMatrix();
 
     QVector3D Position;
     QVector3D Forward;

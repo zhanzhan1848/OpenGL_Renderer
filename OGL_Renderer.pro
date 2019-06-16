@@ -29,7 +29,7 @@ INCLUDEPATH += lib/stb/include/
 
 SOURCES += \
         Camera.cpp \
-        Modle.cpp \
+    Model.cpp \
         OpenGLScene.cpp \
         Shader.cpp \
         Skybox.cpp \
@@ -43,7 +43,7 @@ SOURCES += \
 
 HEADERS += \
         Camera.h \
-        Modle.h \
+        Model.h \
         OpenGLScene.h \
         Shader.h \
         Skybox.h \
@@ -60,5 +60,13 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 DISTFILES += \
     OGL_Renderer.pro.user \
+    shader/mesh.1.frag \
+    shader/mesh.1.vert \
+    shader/mesh.2.frag \
+    shader/mesh.2.vert \
     shader/mesh.frag \
-    shader/mesh.vert
+    shader/mesh.vert \
+    shader/skybox.frag \
+    shader/skybox.vert \
+    shader/skydome.frag \
+    shader/skydome.vert

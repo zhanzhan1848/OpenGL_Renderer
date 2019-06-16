@@ -20,7 +20,7 @@ OpenGLScene::OpenGLScene(QWindow *parent) :OpenGLWindow(parent)
 
 OpenGLScene::~OpenGLScene()
 {
-    modles.clear();
+    models.clear();
     qDebug()<<"quit";
 }
 
@@ -39,11 +39,17 @@ void OpenGLScene::initialize()
 
     //scene modles
     std::string root = "/home/arno/Coding/Modles/";
-    std::string path = root + "d.obj";
-    modles.push_back(modle::create(path));
-    path = root + "untitled.obj";
-    modles.push_back(modle::create(path));
+    std::string path = root + "untitled.obj";
+    modelPtr m1 = model::create(path);
+    models.push_back(m1);
+    path = root + "d.obj";
+    //models.push_back(modle::create(path));
 
+    std::string path2 = "../OpenGL_Renderer/shader/";
+    std::string vert = path2 + "mesh.1.vert";
+    std::string frag = path2 + "mesh.1.frag";
+    shaderPtr sha = Shader::Create(vert,frag);
+    m1->setShader(sha);
 
     //camera
     cam = Camera::create(0,0,4);
@@ -62,15 +68,22 @@ void OpenGLScene::render()
 {
     //glEnable(GL_DEPTH_TEST);
     cam->updateCamPos();
-    QMatrix4x4 camMatrix = cam->getMatrix();
-
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);//清除并渲染背景
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);//清除颜色缓冲和深度缓冲
+    QMatrix4x4 projMatrix = cam->getProjectMatrix();
+    QMatrix4x4 viewMatrix = cam->getViewMatrix();
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-    //skybox->draw(cam->getSkyMatrix());
-    skydome->draw(cam->getSkyMatrix());
-    for(modlePtr m:modles)
-        m->draw(camMatrix);
+    skybox->draw(cam->getSkyMatrix());
+    //skydome->draw(cam->getSkyMatrix());
+    for(modelPtr m:models){
+        for(meshPtr ms:m->data){
+            ms->shader->bind();
+            ms->shader->setAttributeValue("cameraPos",cam->Position);
+            ms->shader->setUniformValue("skybox", 0);
+            skybox->texture->bind(0);
+            ms->draw(projMatrix,viewMatrix);
+        }
+    }
 }
 
 
@@ -181,12 +194,12 @@ void OpenGLScene::keyPressEvent(QKeyEvent *event)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         break;
     case Qt::Key_Down:
-        for(modlePtr md:modles)
+        for(modelPtr md:models)
             for(meshPtr m:md->data)
                 m->transform.translate(0,-0.1f,0);
         break;
     case Qt::Key_Up:
-        for(modlePtr md:modles)
+        for(modelPtr md:models)
             for(meshPtr m:md->data)
                 m->transform.translate(0,0.1f,0);
         break;

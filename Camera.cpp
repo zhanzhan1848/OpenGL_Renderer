@@ -26,8 +26,8 @@ QMatrix4x4 Camera::getMatrix()
 
 QMatrix4x4 Camera::getSkyMatrix()
 {
-    if (MODE == MODE_MOVE || MODE == MODE_ZOOM)
-            Target = Position + Forward;
+    //if (MODE == MODE_MOVE || MODE == MODE_ZOOM)
+    //        Target = Position + Forward;
     Target = QVector3D(0,0,0);
     transform.setToIdentity();
     transform.lookAt(Position,Target,WorldUp);
@@ -39,6 +39,21 @@ QMatrix4x4 Camera::getSkyMatrix()
     skyboxView.setRow(3, QVector4D(0.0f,       0.0f,       0.0f,       1.0f));
 
     return project*skyboxView;
+}
+
+QMatrix4x4 Camera::getProjectMatrix()
+{
+    return project;
+}
+
+QMatrix4x4 Camera::getViewMatrix()
+{
+    //if (MODE == MODE_MOVE || MODE == MODE_ZOOM)
+    //        Target = Position + Forward;
+    Target = QVector3D(0,0,0);
+    transform.setToIdentity();
+    transform.lookAt(Position,Target,WorldUp);
+    return transform;
 }
 
 void Camera::updateCamPos()

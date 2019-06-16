@@ -17,19 +17,21 @@ Shader::Shader(std::string &vert, std::string &frag)
     posAttr = attributeLocation("posAttr");
     normAttr = attributeLocation("normAttr");
     uvAttr = attributeLocation("uvAttr");
+    projMatrix = uniformLocation("projMatrix");
     viewMatrix = uniformLocation("viewMatrix");
     transMatrix = uniformLocation("transMatrix");
     release();
 }
 
-void Shader::setMatrix(QMatrix4x4 view,QMatrix4x4 trans)
+void Shader::setMatrix(QMatrix4x4 projM,QMatrix4x4 viewM,QMatrix4x4 trans)
 {
-    setUniformValue(viewMatrix, view);
+    setUniformValue(projMatrix, projM);
+    setUniformValue(viewMatrix, viewM);
     setUniformValue(transMatrix, trans);
 }
 
-void Shader::setViewMatrix(QMatrix4x4 view)
+void Shader::setViewMatrix(QMatrix4x4 viewM)
 {
-    setUniformValue(viewMatrix, view);
+    setUniformValue(viewMatrix, viewM);
 }
 
