@@ -11,6 +11,7 @@
 #include <QEvent>
 #include <QtOpenGL>
 #include <globalvar.h>
+#include <Shader.h>
 
 OpenGLScene::OpenGLScene(QWindow *parent) :OpenGLWindow(parent)
 {
@@ -37,10 +38,12 @@ void OpenGLScene::initialize()
     //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     //scene modles
-    std::string path = "/home/arno/Coding/Modles/d.obj";
+    std::string root = "/home/arno/Coding/Modles/";
+    std::string path = root + "d.obj";
     modles.push_back(modle::create(path));
-    path = "/home/arno/Coding/Modles/untitled.obj";
+    path = root + "untitled.obj";
     modles.push_back(modle::create(path));
+
 
     //camera
     cam = Camera::create(0,0,4);

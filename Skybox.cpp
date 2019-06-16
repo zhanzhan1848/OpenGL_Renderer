@@ -14,15 +14,10 @@ Skybox::Skybox()
     initializeOpenGLFunctions();
 
     //init shader
-    shader = new QOpenGLShaderProgram();
-    QString path = "../OpenGL_Renderer/shader/";
-    shader->addShaderFromSourceFile(QOpenGLShader::Vertex,path + "skybox.vert");
-    shader->addShaderFromSourceFile(QOpenGLShader::Fragment,path + "skybox.frag");
-    shader->bind();
-    shader->link();
-    m_posAttr = shader->attributeLocation("posAttr");
-    viewMatrix = shader->uniformLocation("viewMatrix");
-
+    std::string path = "../OpenGL_Renderer/shader/";
+    std::string vert = path + "skybox.vert";
+    std::string frag = path + "skybox.frag";
+    shader = Shader::Create(vert,frag);
     //gen buffers
     VAO.create();
     VBO.create();
@@ -81,8 +76,8 @@ Skybox::Skybox()
     glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
     //data to shader
     int stride = 3*sizeof(GLfloat);
-    shader->enableAttributeArray(m_posAttr);
-    shader->setAttributeBuffer(m_posAttr,GL_FLOAT,0,3,stride);
+    shader->enableAttributeArray(shader->posAttr);
+    shader->setAttributeBuffer(shader->posAttr,GL_FLOAT,0,3,stride);
     VAO.release();
     VBO.release();
     shader->release();
@@ -137,7 +132,7 @@ void Skybox::initCubeTexture()
 void Skybox::draw(QMatrix4x4 matrix)
 {
     shader->bind();
-    shader->setUniformValue(viewMatrix, matrix);
+    shader->setViewMatrix(matrix);
     shader->setUniformValue("skybox", 0);
     texture->bind(0);
 
@@ -206,17 +201,10 @@ void Skydome::setImage(std::string &texPath)
 void Skydome::initMaterial()
 {
     mesh->shader->destroyed();
-    mesh->shader = new QOpenGLShaderProgram();
-    QString path = "../OpenGL_Renderer/shader/";
-    mesh->shader->addShaderFromSourceFile(QOpenGLShader::Vertex,path + "skydome.vert");
-    mesh->shader->addShaderFromSourceFile(QOpenGLShader::Fragment,path + "skydome.frag");
-    mesh->shader->bind();
-    mesh->shader->link();
-    mesh->m_posAttr = mesh->shader->attributeLocation("posAttr");
-    mesh->m_normAttr = mesh->shader->attributeLocation("normAttr");
-    mesh->m_uvAttr = mesh->shader->attributeLocation("uvAttr");
-    mesh->viewMatrix = mesh->shader->uniformLocation("viewMatrix");
-    mesh->transMatrix = mesh->shader->uniformLocation("transMatrix");
+    std::string path = "../OpenGL_Renderer/shader/";
+    std::string vert = path + "skydome.vert";
+    std::string frag = path + "skydome.frag";
+    mesh->shader = Shader::Create(vert,frag);
     mesh->setup();
 }
 
@@ -224,8 +212,7 @@ void Skydome::draw(QMatrix4x4 matrix)
 {
     //setup shader
     mesh->shader->bind();
-    mesh->shader->setUniformValue(mesh->viewMatrix, matrix);
-    mesh->shader->setUniformValue(mesh->transMatrix, mesh->transform);
+    mesh->shader->setMatrix(matrix,mesh->transform);
     glBindTexture(GL_TEXTURE_2D, textureID);
     mesh->shader->setUniformValue("skydome", textureID);
     //texture->bind(0);

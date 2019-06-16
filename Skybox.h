@@ -2,6 +2,7 @@
 #include "Modle.h"
 #include <QOpenGLFunctions>
 #include <QOpenGLTexture>
+#include <Shader.h>
 
 class Skybox;
 class Skydome;
@@ -17,9 +18,7 @@ public:
     QOpenGLTexture *texture;
     QOpenGLVertexArrayObject VAO;
     QOpenGLBuffer VBO;
-    QOpenGLShaderProgram *shader;
-    GLuint m_posAttr;
-    GLuint viewMatrix;
+    shaderPtr shader;
     QList<QString> texPath;
     void initCubeTexture();
     void draw(QMatrix4x4 matrix);

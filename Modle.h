@@ -12,6 +12,7 @@
 #include <QMatrix4x4>
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
+#include <Shader.h>
 
 class mesh;
 class modle;
@@ -40,12 +41,7 @@ public:
     std::vector<size_t> uvElements;
 
     //QOpenGLExtraFunctions * f;
-    QOpenGLShaderProgram *shader;
-    GLuint m_posAttr;
-    GLuint m_normAttr;
-    GLuint m_uvAttr;
-    GLuint viewMatrix;
-    GLuint transMatrix;
+    shaderPtr shader;
 
     QOpenGLVertexArrayObject VAO;
     QOpenGLBuffer VBO,EBO;
@@ -54,7 +50,7 @@ public:
     void setup();
     void draw(QMatrix4x4 matrix);
     void clearData();
-
+    void setShader(shaderPtr s);
 };
 
 class modle {
@@ -65,6 +61,8 @@ public:
     void setObj(std::string &objPath);
     void draw(QMatrix4x4 matrix);
     std::vector<meshPtr> data;
+
+    void setShader(shaderPtr s);
 private:
     std::string path;
 

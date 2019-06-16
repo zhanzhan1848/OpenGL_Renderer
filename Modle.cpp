@@ -164,12 +164,12 @@ void mesh::setup()
 
     //data to shader
     int stride = 8*sizeof(GLfloat);
-    shader->enableAttributeArray(m_posAttr);
-    shader->setAttributeBuffer(m_posAttr,GL_FLOAT,0,3,stride);
-    shader->enableAttributeArray(m_normAttr);
-    shader->setAttributeBuffer(m_normAttr,GL_FLOAT,3*sizeof(GLfloat),3,stride);
-    shader->enableAttributeArray(m_uvAttr);
-    shader->setAttributeBuffer(m_uvAttr,GL_FLOAT,6*sizeof(GLfloat),2,stride);
+    shader->enableAttributeArray(shader->posAttr);
+    shader->setAttributeBuffer(shader->posAttr,GL_FLOAT,0,3,stride);
+    shader->enableAttributeArray(shader->normAttr);
+    shader->setAttributeBuffer(shader->normAttr,GL_FLOAT,3*sizeof(GLfloat),3,stride);
+    shader->enableAttributeArray(shader->uvAttr);
+    shader->setAttributeBuffer(shader->uvAttr,GL_FLOAT,6*sizeof(GLfloat),2,stride);
 
     VAO.release();
     VBO.release();
@@ -181,8 +181,7 @@ void mesh::draw(QMatrix4x4 matrix) {
 
     //setup shader
     shader->bind();
-    shader->setUniformValue(viewMatrix, matrix);
-    shader->setUniformValue(transMatrix, transform);
+    shader->setMatrix(matrix,transform);
 
     // Draw mesh
     VAO.bind();
@@ -204,6 +203,11 @@ void mesh::clearData()
     uvElements.clear();
 }
 
+void mesh::setShader(shaderPtr s)
+{
+    shader = s;
+}
+
 meshPtr mesh::create()
 {
     meshPtr ms{new mesh()};
@@ -217,17 +221,11 @@ mesh::mesh()
     initializeOpenGLFunctions();
 
     //init gl data
-    shader = new QOpenGLShaderProgram();
-    QString path = "../OpenGL_Renderer/shader/";
-    shader->addShaderFromSourceFile(QOpenGLShader::Vertex,path + "mesh.vert");
-    shader->addShaderFromSourceFile(QOpenGLShader::Fragment,path + "mesh.frag");
-    shader->bind();
-    shader->link();
-    m_posAttr = shader->attributeLocation("posAttr");
-    m_normAttr = shader->attributeLocation("normAttr");
-    m_uvAttr = shader->attributeLocation("uvAttr");
-    viewMatrix = shader->uniformLocation("viewMatrix");
-    transMatrix = shader->uniformLocation("transMatrix");
+    std::string path = "../OpenGL_Renderer/shader/";
+    std::string vert = path + "mesh.vert";
+    std::string frag = path + "mesh.frag";
+
+    shader = Shader::Create(vert,frag);
     transform.setToIdentity();
 
     VAO.create();
@@ -241,7 +239,6 @@ mesh::~mesh() {
     VBO.destroy();
     EBO.destroy();
     shader->destroyed();
-    delete shader;
     clearData();
 
     qDebug()<<"remove mesh: "<<QString::fromStdString(name);
@@ -251,6 +248,12 @@ mesh::~mesh() {
 void modle::draw(QMatrix4x4 matrix) {
     for(meshPtr m:data)
         m->draw(matrix);
+}
+
+void modle::setShader(shaderPtr s)
+{
+    for(meshPtr m:data)
+        m->setShader(s);
 }
 
 

@@ -25,7 +25,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++17
 
 INCLUDEPATH += lib/stb/include/
-INCLUDEPATH += /home/arno/Coding/LIB/SOIL/src/
+#INCLUDEPATH += /home/arno/Coding/LIB/SOIL/src/
 
 SOURCES += \
         Camera.cpp \
@@ -34,6 +34,7 @@ SOURCES += \
         Shader.cpp \
         Skybox.cpp \
         globalvar.cpp \
+    lib/stb/src/libstb.c \
         main.cpp \
         main_2.cpp \
         mainwindow.cpp \
