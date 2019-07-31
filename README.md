@@ -1,7 +1,7 @@
 # OpenGL_Renderer
 
 
-This is a opengl Rasterisation renderer
+This is a Rasterisation renderer based on opengl
 
 
 
